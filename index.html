@@ -35,6 +35,7 @@ button.g{background:transparent;color:var(--fg);border:1px solid var(--line)}but
 <label for="txt">Cosa hai detto (puoi correggere)</label>
 <textarea id="txt" placeholder="Es.: sono da Rossi Mario a Bitonto, perde sotto il lavello, serve una membrana, urgente"></textarea>
 <button id="go">🧠 Prepara il ticket</button>
+<button id="clr" class="g">🗑️ Cancella tutto e rifai</button>
 </section>
 
 <section class="card" id="res" hidden>
@@ -70,6 +71,7 @@ r.onerror=function(e){$("st").textContent=e.error==="not-allowed"?"Microfono non
 r.onend=function(){on=false;$("mic").classList.remove("on");$("mic").innerHTML="🎙️<br>Parla";if(/^Ti ascolto/.test($("st").textContent))$("st").textContent="";if($("txt").value.trim())prepara()};
 try{r.start()}catch(x){$("st").textContent="Microfono non partito."}};
 $("go").onclick=prepara;
+$("clr").onclick=function(){if(on&&r){try{r.abort()}catch(x){}}base="";$("txt").value="";$("res").hidden=true;$("esito").textContent="";$("st").textContent="";$("cli").innerHTML="";$("des").value="";$("txt").focus()};
 function prepara(){var t=$("txt").value.trim();if(!t)return;var TN=n(t);
 var sc=IDX.map(function(c){var p=n(c.cli).split(/[^A-Z]+/).filter(function(x){return x.length>=3});var k=p.filter(function(x){return new RegExp("\\b"+x+"\\b").test(TN)}).length;var s=k>=2?k+1:(k===1&&p.length===1?1:0);if(s&&c.loc&&TN.indexOf(n(c.loc))>=0)s+=2;return [s,c]}).filter(function(x){return x[0]>0}).sort(function(a,b){return b[0]-a[0]}).slice(0,6);
 var tel=(t.replace(/(\d)\s+(?=\d)/g,"$1").match(/\b3\d{8,9}\b/)||[""])[0];if(tel){IDX.filter(function(c){return c.tt.indexOf(tel.slice(-9))>=0}).forEach(function(c){sc.unshift([99,c])})}
